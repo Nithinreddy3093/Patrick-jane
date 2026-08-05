@@ -11,9 +11,11 @@ import {
   Search, 
   Crown,
   Pin,
-  BookOpen
+  BookOpen,
+  Move
 } from 'lucide-react';
 import { UserProfile } from '../types';
+import { DraggableFolder } from './DraggableFolder';
 
 interface CourseListProps {
   onSelectModule: (moduleId: number) => void;
@@ -88,6 +90,15 @@ export function CourseList({ onSelectModule, profile }: CourseListProps) {
           <img 
             src="/course-bg.jpg" 
             alt="The Academy Study Desk" 
+            onError={(e) => {
+              const img = e.currentTarget;
+              if (!img.dataset.failed) {
+                img.dataset.failed = 'true';
+                img.src = '/course-bg.png';
+              } else {
+                img.style.display = 'none';
+              }
+            }}
             className="absolute inset-0 w-full h-full object-cover object-center pointer-events-none opacity-90 transition-transform duration-700 group-hover:scale-105"
           />
 
@@ -278,100 +289,104 @@ export function CourseList({ onSelectModule, profile }: CourseListProps) {
               const isDone = m.status === 'completed';
 
               return (
-                <div key={m.id} className="relative group">
-                  {/* Push Pin */}
-                  <div className="absolute -top-3 left-1/2 -translate-x-1/2 w-2.5 h-2.5 rounded-full bg-red-600 border border-red-300 z-20 shadow-md" />
+                <DraggableFolder key={m.id} onClick={() => onSelectModule(m.id)}>
+                  <div className="relative group">
+                    {/* Push Pin */}
+                    <div className="absolute -top-3 left-1/2 -translate-x-1/2 w-2.5 h-2.5 rounded-full bg-red-600 border border-red-300 z-20 shadow-md" />
 
-                  {/* Card Container */}
-                  <div 
-                    onClick={() => onSelectModule(m.id)}
-                    className={`w-32 h-44 rounded-xl border p-2.5 flex flex-col justify-between transition-all duration-300 cursor-pointer hover:-translate-y-1.5 shadow-xl relative overflow-hidden ${
-                      isDone 
-                        ? 'bg-[#12141a] border-emerald-500/50 hover:border-emerald-400' 
-                        : 'bg-[#101014] border-[#2a2a38] hover:border-[#D4AF37]'
-                    }`}
-                  >
-                    {/* Thumbnail Image inside card */}
-                    <div className="h-20 w-full rounded-lg overflow-hidden relative bg-zinc-900 border border-black/50">
-                      <img 
-                        src={m.bgImage} 
-                        alt={m.title} 
-                        className={`w-full h-full object-cover ${!isDone ? 'filter grayscale brightness-75' : ''}`}
-                      />
-                      <div className="absolute inset-0 bg-black/30" />
+                    {/* Card Container */}
+                    <div 
+                      className={`w-32 h-44 rounded-xl border p-2.5 flex flex-col justify-between transition-all duration-300 cursor-grab active:cursor-grabbing hover:-translate-y-1.5 shadow-xl relative overflow-hidden ${
+                        isDone 
+                          ? 'bg-[#12141a] border-emerald-500/50 hover:border-emerald-400' 
+                          : 'bg-[#101014] border-[#2a2a38] hover:border-[#D4AF37]'
+                      }`}
+                    >
+                      {/* Thumbnail Image inside card */}
+                      <div className="h-20 w-full rounded-lg overflow-hidden relative bg-zinc-900 border border-black/50">
+                        <img 
+                          src={m.bgImage} 
+                          alt={m.title} 
+                          className={`w-full h-full object-cover ${!isDone ? 'filter grayscale brightness-75' : ''}`}
+                        />
+                        <div className="absolute inset-0 bg-black/30" />
 
-                      {/* Icon Badge Overlay */}
-                      <div className="absolute inset-0 flex items-center justify-center">
-                        <div className="w-8 h-8 rounded-full bg-black/80 border border-[#D4AF37] flex items-center justify-center text-[#D4AF37] shadow-lg">
-                          <Icon className="w-4 h-4" />
+                        {/* Icon Badge Overlay */}
+                        <div className="absolute inset-0 flex items-center justify-center">
+                          <div className="w-8 h-8 rounded-full bg-black/80 border border-[#D4AF37] flex items-center justify-center text-[#D4AF37] shadow-lg">
+                            <Icon className="w-4 h-4" />
+                          </div>
                         </div>
                       </div>
-                    </div>
 
-                    {/* Card Label */}
-                    <div className="text-center space-y-0.5">
-                      <div className="text-[10px] font-mono text-zinc-400 font-bold">{m.num}</div>
-                      <div className="text-[10px] font-serif font-bold text-white leading-tight line-clamp-2">
-                        {m.title}
+                      {/* Card Label */}
+                      <div className="text-center space-y-0.5">
+                        <div className="text-[10px] font-mono text-zinc-400 font-bold">{m.num}</div>
+                        <div className="text-[10px] font-serif font-bold text-white leading-tight line-clamp-2">
+                          {m.title}
+                        </div>
+                      </div>
+
+                      {/* Bottom Status Tag */}
+                      <div className="flex justify-center pt-1 border-t border-white/5">
+                        {isDone ? (
+                          <CheckCircle2 className="w-4 h-4 text-emerald-400 fill-emerald-400/20" />
+                        ) : (
+                          <Lock className="w-3.5 h-3.5 text-zinc-500" />
+                        )}
                       </div>
                     </div>
-
-                    {/* Bottom Status Tag */}
-                    <div className="flex justify-center pt-1 border-t border-white/5">
-                      {isDone ? (
-                        <CheckCircle2 className="w-4 h-4 text-emerald-400 fill-emerald-400/20" />
-                      ) : (
-                        <Lock className="w-3.5 h-3.5 text-zinc-500" />
-                      )}
-                    </div>
                   </div>
-                </div>
+                </DraggableFolder>
               );
             })}
 
             {/* Vintage Detective Photo Card */}
-            <div className="relative">
-              <div className="absolute -top-3 left-1/2 -translate-x-1/2 w-2.5 h-2.5 rounded-full bg-red-600 border border-red-300 z-20 shadow-md" />
-              <div className="w-32 h-44 rounded-xl border border-[#38384a] bg-[#121218] p-2 flex flex-col justify-between shadow-xl rotate-[2deg] hover:rotate-0 transition-transform">
-                <div className="h-full w-full rounded-lg overflow-hidden relative">
-                  <img 
-                    src="https://images.unsplash.com/photo-1507679799987-c73779587ccf?auto=format&fit=crop&w=400&q=80" 
-                    alt="Detective Scene" 
-                    className="w-full h-full object-cover filter contrast-125 sepia-[0.3]"
-                  />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent" />
-                  <span className="absolute bottom-1.5 left-2 text-[9px] font-mono text-[#D4AF37] font-bold">
-                    EVIDENCE #07
-                  </span>
+            <DraggableFolder>
+              <div className="relative group">
+                <div className="absolute -top-3 left-1/2 -translate-x-1/2 w-2.5 h-2.5 rounded-full bg-red-600 border border-red-300 z-20 shadow-md" />
+                <div className="w-32 h-44 rounded-xl border border-[#38384a] bg-[#121218] p-2 flex flex-col justify-between shadow-xl rotate-[2deg] hover:rotate-0 transition-transform cursor-grab active:cursor-grabbing">
+                  <div className="h-full w-full rounded-lg overflow-hidden relative">
+                    <img 
+                      src="https://images.unsplash.com/photo-1507679799987-c73779587ccf?auto=format&fit=crop&w=400&q=80" 
+                      alt="Detective Scene" 
+                      className="w-full h-full object-cover filter contrast-125 sepia-[0.3]"
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent" />
+                    <span className="absolute bottom-1.5 left-2 text-[9px] font-mono text-[#D4AF37] font-bold">
+                      EVIDENCE #07
+                    </span>
+                  </div>
                 </div>
               </div>
-            </div>
+            </DraggableFolder>
 
             {/* Leather Book FINAL INVESTIGATION Card */}
-            <div className="relative">
-              <div className="absolute -top-3 left-1/2 -translate-x-1/2 w-2.5 h-2.5 rounded-full bg-red-600 border border-red-300 z-20 shadow-md" />
-              <div 
-                onClick={() => onSelectModule(12)}
-                className="w-36 h-44 rounded-xl border border-[#D4AF37]/60 bg-gradient-to-b from-[#1c1810] to-[#121218] p-3 flex flex-col items-center justify-between text-center shadow-2xl cursor-pointer hover:border-[#D4AF37] transition-all"
-              >
-                <div className="w-8 h-8 rounded-full bg-[#262012] border border-[#D4AF37] flex items-center justify-center text-[#D4AF37] mt-2">
-                  <BookOpen className="w-4 h-4" />
-                </div>
-
-                <div className="space-y-1">
-                  <div className="text-[11px] font-serif font-bold text-[#F5D982] tracking-wider uppercase">
-                    FINAL INVESTIGATION
+            <DraggableFolder onClick={() => onSelectModule(12)}>
+              <div className="relative group">
+                <div className="absolute -top-3 left-1/2 -translate-x-1/2 w-2.5 h-2.5 rounded-full bg-red-600 border border-red-300 z-20 shadow-md" />
+                <div 
+                  className="w-36 h-44 rounded-xl border border-[#D4AF37]/60 bg-gradient-to-b from-[#1c1810] to-[#121218] p-3 flex flex-col items-center justify-between text-center shadow-2xl cursor-grab active:cursor-grabbing hover:border-[#D4AF37] transition-all"
+                >
+                  <div className="w-8 h-8 rounded-full bg-[#262012] border border-[#D4AF37] flex items-center justify-center text-[#D4AF37] mt-2">
+                    <BookOpen className="w-4 h-4" />
                   </div>
-                  <div className="flex justify-center text-[#D4AF37] text-[10px]">
-                    <span>★</span><span>★</span><span>★</span>
-                  </div>
-                </div>
 
-                <div className="p-1">
-                  <Lock className="w-3.5 h-3.5 text-zinc-500" />
+                  <div className="space-y-1">
+                    <div className="text-[11px] font-serif font-bold text-[#F5D982] tracking-wider uppercase">
+                      FINAL INVESTIGATION
+                    </div>
+                    <div className="flex justify-center text-[#D4AF37] text-[10px]">
+                      <span>★</span><span>★</span><span>★</span>
+                    </div>
+                  </div>
+
+                  <div className="p-1">
+                    <Lock className="w-3.5 h-3.5 text-zinc-500" />
+                  </div>
                 </div>
               </div>
-            </div>
+            </DraggableFolder>
 
           </div>
 

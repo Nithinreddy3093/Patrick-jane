@@ -58,6 +58,15 @@ export function LandingHero({ onSelectTab, onSelectModule }: LandingHeroProps) {
           <img 
             src="/hero-bg.jpg" 
             alt="The Jane Method - Detective Observation Background"
+            onError={(e) => {
+              const img = e.currentTarget;
+              if (!img.dataset.failed) {
+                img.dataset.failed = 'true';
+                img.src = '/hero-bg.png';
+              } else {
+                img.style.display = 'none';
+              }
+            }}
             className="w-full h-full object-cover object-center pointer-events-none select-none opacity-90"
           />
           {/* Overlays */}

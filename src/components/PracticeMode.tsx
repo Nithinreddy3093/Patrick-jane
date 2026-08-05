@@ -141,8 +141,17 @@ export function PracticeMode({ onAddXp }: PracticeModeProps) {
         
         {/* Background Detective Desk/Study Image */}
         <img 
-          src="/course-bg.jpg" 
-          alt="Detective Study Desk" 
+          src="/practice-bg.jpg" 
+          alt="Practice Mode Detective Desk Background" 
+          onError={(e) => {
+            const img = e.currentTarget;
+            if (!img.dataset.failed) {
+              img.dataset.failed = 'true';
+              img.src = '/practice-bg.png';
+            } else {
+              img.style.display = 'none';
+            }
+          }}
           className="absolute inset-0 w-full h-full object-cover object-center pointer-events-none opacity-90 transition-transform duration-700 group-hover:scale-105"
         />
 
