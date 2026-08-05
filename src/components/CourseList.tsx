@@ -95,7 +95,7 @@ export function CourseList({ onSelectModule, profile }: CourseListProps) {
           <div 
             className="absolute inset-0 pointer-events-none"
             style={{
-              background: 'linear-gradient(to right, rgba(9,9,11,0.95) 0%, rgba(9,9,11,0.8) 45%, rgba(9,9,11,0.3) 100%)'
+              background: 'linear-gradient(to right, rgba(9,9,11,0.85) 0%, rgba(9,9,11,0.6) 45%, rgba(9,9,11,0.2) 100%)'
             }}
           />
 

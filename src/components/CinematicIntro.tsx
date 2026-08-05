@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
-import { Play, FastForward, Volume2, VolumeX, ShieldAlert } from 'lucide-react';
+import { FastForward, Volume2, VolumeX } from 'lucide-react';
 
 interface CinematicIntroProps {
   onComplete: () => void;
@@ -10,7 +10,7 @@ export function CinematicIntro({ onComplete }: CinematicIntroProps) {
   const [showSkipButton, setShowSkipButton] = useState(false);
   const [isFadingOut, setIsFadingOut] = useState(false);
   const [isMuted, setIsMuted] = useState(true);
-  const iframeRef = useRef<HTMLIFrameElement>(null);
+  const videoRef = useRef<HTMLVideoElement>(null);
 
   useEffect(() => {
     // Reveal "Skip Intro" button after 2 seconds
@@ -18,14 +18,9 @@ export function CinematicIntro({ onComplete }: CinematicIntroProps) {
       setShowSkipButton(true);
     }, 2000);
 
-    // Safety fallback timer if YT API event is missed (e.g. ~45s)
-    const endFallbackTimer = setTimeout(() => {
-      handleFinish();
-    }, 45000);
-
-    // Disable keyboard shortcuts during intro
+    // Disable keyboard shortcuts during intro (except Esc / Enter / Space to skip/toggle)
     const handleKeyDown = (e: KeyboardEvent) => {
-      if (['Space', 'ArrowUp', 'ArrowDown', 'PageUp', 'PageDown'].includes(e.code)) {
+      if (['ArrowUp', 'ArrowDown', 'PageUp', 'PageDown'].includes(e.code)) {
         e.preventDefault();
       }
       if (e.code === 'Escape' || e.code === 'Enter') {
@@ -34,27 +29,21 @@ export function CinematicIntro({ onComplete }: CinematicIntroProps) {
     };
     window.addEventListener('keydown', handleKeyDown);
 
-    // Listen to messages from YouTube iframe API
-    const handleMessage = (event: MessageEvent) => {
-      try {
-        if (typeof event.data === 'string') {
-          const data = JSON.parse(event.data);
-          if (data.event === 'onStateChange' && data.info === 0) {
-            // State 0 = ENDED
-            handleFinish();
-          }
+    // Attempt video play
+    if (videoRef.current) {
+      videoRef.current.play().catch(() => {
+        // Fallback if browser blocks autoplay with sound
+        if (videoRef.current) {
+          videoRef.current.muted = true;
+          setIsMuted(true);
+          videoRef.current.play().catch(console.error);
         }
-      } catch (err) {
-        // Ignore non-JSON messages
-      }
-    };
-    window.addEventListener('message', handleMessage);
+      });
+    }
 
     return () => {
       clearTimeout(skipTimer);
-      clearTimeout(endFallbackTimer);
       window.removeEventListener('keydown', handleKeyDown);
-      window.removeEventListener('message', handleMessage);
     };
   }, []);
 
@@ -69,20 +58,17 @@ export function CinematicIntro({ onComplete }: CinematicIntroProps) {
       console.error(e);
     }
 
-    // Fade to black for 800ms before removing intro
+    // Fade to black for 800ms before removing intro component & popping home page
     setTimeout(() => {
       onComplete();
     }, 800);
   };
 
   const toggleSound = () => {
-    setIsMuted(!isMuted);
-    if (iframeRef.current && iframeRef.current.contentWindow) {
-      const func = isMuted ? 'unMute' : 'mute';
-      iframeRef.current.contentWindow.postMessage(
-        JSON.stringify({ event: 'command', func }),
-        '*'
-      );
+    if (videoRef.current) {
+      const nextMuted = !isMuted;
+      videoRef.current.muted = nextMuted;
+      setIsMuted(nextMuted);
     }
   };
 
@@ -95,23 +81,22 @@ export function CinematicIntro({ onComplete }: CinematicIntroProps) {
         transition={{ duration: 0.8, ease: "easeInOut" }}
         className="fixed inset-0 z-[100] bg-[#090909] flex items-center justify-center overflow-hidden select-none"
       >
-        {/* YouTube Background Video Container */}
-        <div className="absolute inset-0 overflow-hidden flex items-center justify-center pointer-events-none">
-          <div className="relative w-[180vw] h-[180vh] min-w-[100vw] min-h-[100vh] flex items-center justify-center">
-            <iframe
-              ref={iframeRef}
-              src="https://www.youtube-nocookie.com/embed/9AHBarwEIwk?autoplay=1&mute=1&controls=0&loop=0&rel=0&modestbranding=1&playsinline=1&enablejsapi=1"
-              title="The Jane Method Academy Cinematic Intro"
-              className="w-full h-full object-cover scale-125 opacity-90 transition-opacity duration-1000"
-              allow="autoplay; encrypted-media; picture-in-picture"
-              allowFullScreen
-            />
-          </div>
+        {/* HTML5 Cinematic Video Element from Google Drive */}
+        <div className="absolute inset-0 overflow-hidden flex items-center justify-center bg-black">
+          <video
+            ref={videoRef}
+            src="/intro-video.mp4"
+            autoPlay
+            muted={isMuted}
+            playsInline
+            onEnded={handleFinish}
+            className="w-full h-full object-cover scale-105 opacity-95 transition-opacity duration-1000"
+          />
         </div>
 
         {/* Dark Luxury Overlays */}
         {/* Subtle 25% black gradient overlay */}
-        <div className="absolute inset-0 bg-gradient-to-t from-[#090909] via-black/30 to-[#090909]/80 pointer-events-none" />
+        <div className="absolute inset-0 bg-gradient-to-t from-[#090909] via-black/25 to-[#090909]/70 pointer-events-none" />
         <div className="absolute inset-0 vignette-overlay pointer-events-none opacity-80" />
         <div className="absolute inset-0 film-grain pointer-events-none opacity-30 mix-blend-overlay" />
 
@@ -140,7 +125,7 @@ export function CinematicIntro({ onComplete }: CinematicIntroProps) {
             {isMuted ? (
               <>
                 <VolumeX className="w-3.5 h-3.5 text-zinc-400" />
-                <span className="hidden sm:inline">Unmute Audio</span>
+                <span className="hidden sm:inline">Unmute Sound</span>
               </>
             ) : (
               <>

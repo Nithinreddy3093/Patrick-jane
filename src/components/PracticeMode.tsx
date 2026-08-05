@@ -143,14 +143,14 @@ export function PracticeMode({ onAddXp }: PracticeModeProps) {
         <img 
           src="/course-bg.jpg" 
           alt="Detective Study Desk" 
-          className="absolute inset-0 w-full h-full object-cover object-center pointer-events-none opacity-85 transition-transform duration-700 group-hover:scale-105"
+          className="absolute inset-0 w-full h-full object-cover object-center pointer-events-none opacity-90 transition-transform duration-700 group-hover:scale-105"
         />
 
         {/* Dark Overlay Gradient for High Contrast Readability */}
         <div 
           className="absolute inset-0 pointer-events-none"
           style={{
-            background: 'linear-gradient(to right, rgba(9,9,11,0.95) 0%, rgba(9,9,11,0.85) 45%, rgba(9,9,11,0.25) 100%)'
+            background: 'linear-gradient(to right, rgba(9,9,11,0.85) 0%, rgba(9,9,11,0.6) 45%, rgba(9,9,11,0.2) 100%)'
           }}
         />
 

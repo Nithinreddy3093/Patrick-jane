@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { motion, AnimatePresence } from 'motion/react';
 import { ParticleBackground } from './components/ParticleBackground';
 import { Navbar } from './components/Navbar';
 import { Sidebar } from './components/Sidebar';
@@ -13,7 +14,6 @@ import { UserProfileView } from './components/UserProfile';
 import { CertificateView } from './components/CertificateView';
 import { FinalExamView } from './components/FinalExamView';
 import { SettingsView } from './components/SettingsView';
-import { AmbientAudio } from './components/AmbientAudio';
 import { CinematicIntro } from './components/CinematicIntro';
 
 import { NavigationTab, Lesson } from './types';
@@ -88,9 +88,6 @@ export default function App() {
       {/* Dynamic Canvas Particle Overlay */}
       <ParticleBackground />
 
-      {/* Atmospheric Ambient Audio Player */}
-      <AmbientAudio activeTab={activeTab} />
-
       {/* Main Top Navigation on all pages */}
       <Navbar
         activeTab={activeTab}
@@ -103,90 +100,106 @@ export default function App() {
         profile={profile}
       />
 
-      {/* Main Container Content */}
+      {/* Main Container Content with Cinematic AnimatePresence Scene Changes */}
       <main className="min-h-screen relative z-10">
-        {selectedLesson ? (
-          <LessonViewer
-            lesson={selectedLesson.lesson}
-            onBack={() => setSelectedLesson(null)}
-            onCompleteLesson={handleCompleteLessonAndCheckModule}
-            profile={profile}
-          />
-        ) : (
-          <>
-            {activeTab === 'home' && (
-              <LandingHero
-                onSelectTab={setActiveTab}
-                onSelectModule={handleSelectModule}
+        <AnimatePresence mode="wait">
+          {selectedLesson ? (
+            <motion.div
+              key={`lesson-${selectedLesson.lesson.id}`}
+              initial={{ opacity: 0, y: 15, filter: 'blur(4px)' }}
+              animate={{ opacity: 1, y: 0, filter: 'blur(0px)' }}
+              exit={{ opacity: 0, y: -15, filter: 'blur(4px)' }}
+              transition={{ duration: 0.45, ease: [0.16, 1, 0.3, 1] }}
+            >
+              <LessonViewer
+                lesson={selectedLesson.lesson}
+                onBack={() => setSelectedLesson(null)}
+                onCompleteLesson={handleCompleteLessonAndCheckModule}
                 profile={profile}
               />
-            )}
+            </motion.div>
+          ) : (
+            <motion.div
+              key={activeTab}
+              initial={{ opacity: 0, y: 12, filter: 'blur(3px)' }}
+              animate={{ opacity: 1, y: 0, filter: 'blur(0px)' }}
+              exit={{ opacity: 0, y: -12, filter: 'blur(3px)' }}
+              transition={{ duration: 0.45, ease: [0.16, 1, 0.3, 1] }}
+            >
+              {activeTab === 'home' && (
+                <LandingHero
+                  onSelectTab={setActiveTab}
+                  onSelectModule={handleSelectModule}
+                  profile={profile}
+                />
+              )}
 
-            {activeTab === 'course' && (
-              <CourseList
-                onSelectModule={handleSelectModule}
-                onSelectLesson={handleSelectLesson}
-                profile={profile}
-              />
-            )}
+              {activeTab === 'course' && (
+                <CourseList
+                  onSelectModule={handleSelectModule}
+                  onSelectLesson={handleSelectLesson}
+                  profile={profile}
+                />
+              )}
 
-            {activeTab === 'practice' && (
-              <PracticeMode
-                onAddXp={addXp}
-              />
-            )}
+              {activeTab === 'practice' && (
+                <PracticeMode
+                  onAddXp={addXp}
+                />
+              )}
 
-            {activeTab === 'detective-lab' && (
-              <DetectiveLab
-                onSolveCase={solveCase}
-                solvedCaseIds={profile.solvedCaseIds}
-              />
-            )}
+              {activeTab === 'detective-lab' && (
+                <DetectiveLab
+                  onSolveCase={solveCase}
+                  solvedCaseIds={profile.solvedCaseIds}
+                />
+              )}
 
-            {activeTab === 'daily-challenge' && (
-              <DailyChallenge
-                onSubmitChallenge={submitDailyChallenge}
-                profile={profile}
-              />
-            )}
+              {activeTab === 'daily-challenge' && (
+                <DailyChallenge
+                  onSubmitChallenge={submitDailyChallenge}
+                  profile={profile}
+                />
+              )}
 
-            {activeTab === 'mentor' && (
-              <AIMentor />
-            )}
+              {activeTab === 'mentor' && (
+                <AIMentor />
+              )}
 
-            {activeTab === 'profile' && (
-              <UserProfileView
-                profile={profile}
-                onUpdateName={updateName}
-                onOpenCertificate={() => setActiveTab('certificate')}
-                onToggleAlwaysPlayIntro={toggleAlwaysPlayIntro}
-              />
-            )}
+              {activeTab === 'profile' && (
+                <UserProfileView
+                  profile={profile}
+                  onUpdateName={updateName}
+                  onOpenCertificate={() => setActiveTab('certificate')}
+                  onToggleAlwaysPlayIntro={toggleAlwaysPlayIntro}
+                />
+              )}
 
-            {activeTab === 'certificate' && (
-              <CertificateView
-                profile={profile}
-                onBack={() => setActiveTab('profile')}
-              />
-            )}
+              {activeTab === 'certificate' && (
+                <CertificateView
+                  profile={profile}
+                  onBack={() => setActiveTab('profile')}
+                />
+              )}
 
-            {activeTab === 'final-exam' && (
-              <FinalExamView
-                profile={profile}
-                onPassExam={(xp) => addXp(xp, "Passed Master Observer Examination")}
-                onBack={() => setActiveTab('home')}
-              />
-            )}
+              {activeTab === 'final-exam' && (
+                <FinalExamView
+                  profile={profile}
+                  onPassExam={(xp) => addXp(xp, "Passed Master Observer Examination")}
+                  onBack={() => setActiveTab('home')}
+                />
+              )}
 
-            {activeTab === 'settings' && (
-              <SettingsView
-                onResetProgress={resetProgress}
-                playIntroOnEveryVisit={profile.playIntroOnEveryVisit}
-                onToggleAlwaysPlayIntro={toggleAlwaysPlayIntro}
-              />
-            )}
-          </>
-        )}
+              {activeTab === 'settings' && (
+                <SettingsView
+                  onResetProgress={resetProgress}
+                  playIntroOnEveryVisit={profile.playIntroOnEveryVisit}
+                  onToggleAlwaysPlayIntro={toggleAlwaysPlayIntro}
+                />
+              )}
+            </motion.div>
+          )}
+        </AnimatePresence>
       </main>
     </div>
   );

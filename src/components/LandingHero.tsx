@@ -39,7 +39,12 @@ export function LandingHero({ onSelectTab, onSelectModule }: LandingHeroProps) {
   ];
 
   return (
-    <div className="relative min-h-screen bg-[#090909] text-[#F5F5F5] overflow-x-hidden">
+    <motion.div 
+      initial={{ opacity: 0, scale: 0.98 }}
+      animate={{ opacity: 1, scale: 1 }}
+      transition={{ duration: 0.9, ease: [0.16, 1, 0.3, 1] }}
+      className="relative min-h-screen bg-[#090909] text-[#F5F5F5] overflow-x-hidden"
+    >
       
       {/* SECTION 1: HERO CONTAINER WITH BACKGROUND IMAGE */}
       <div className="relative min-h-[92vh] flex flex-col justify-between overflow-hidden">
@@ -52,25 +57,20 @@ export function LandingHero({ onSelectTab, onSelectModule }: LandingHeroProps) {
         >
           <img 
             src="/hero-bg.jpg" 
-            alt="The Jane Method - Patrick Jane sitting in front of Red John smiley wall"
-            referrerPolicy="no-referrer"
-            className="w-full h-full object-cover cinematic-grade pointer-events-none select-none"
-            style={{
-              objectFit: 'cover',
-              objectPosition: 'center right'
-            }}
+            alt="The Jane Method - Detective Observation Background"
+            className="w-full h-full object-cover object-center pointer-events-none select-none opacity-90"
           />
           {/* Overlays */}
-          <div className="absolute top-0 right-0 w-2/3 h-full light-rays pointer-events-none opacity-80" />
-          <div className="absolute inset-0 film-grain pointer-events-none opacity-40 mix-blend-overlay" />
+          <div className="absolute top-0 right-0 w-2/3 h-full light-rays pointer-events-none opacity-50" />
+          <div className="absolute inset-0 film-grain pointer-events-none opacity-20 mix-blend-overlay" />
           <div className="absolute inset-0 vignette-overlay pointer-events-none" />
           <div 
             className="absolute inset-0 pointer-events-none"
             style={{
-              background: 'linear-gradient(to right, rgba(0,0,0,0.88) 0%, rgba(0,0,0,0.45) 50%, rgba(0,0,0,0.18) 100%)'
+              background: 'linear-gradient(to right, rgba(9,9,9,0.85) 0%, rgba(9,9,9,0.45) 50%, rgba(9,9,9,0.15) 100%)'
             }}
           />
-          <div className="absolute inset-0 bg-gradient-to-b from-[#090909]/90 via-transparent to-[#090909] pointer-events-none" />
+          <div className="absolute inset-0 bg-gradient-to-b from-[#090909]/60 via-transparent to-[#090909] pointer-events-none" />
         </motion.div>
 
         {/* Hero Main Content */}
@@ -614,6 +614,6 @@ export function LandingHero({ onSelectTab, onSelectModule }: LandingHeroProps) {
         </div>
       )}
 
-    </div>
+    </motion.div>
   );
 }
