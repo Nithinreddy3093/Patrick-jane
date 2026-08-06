@@ -23,6 +23,7 @@ import {
   Move
 } from 'lucide-react';
 import { UserProfile } from '../types';
+import { BackgroundImage } from './BackgroundImage';
 import { getTodayChallenge, DAILY_CHALLENGES } from '../data/dailyChallengesData';
 import { DraggableFolder } from './DraggableFolder';
 
@@ -106,25 +107,16 @@ export function DailyChallenge({ onSubmitChallenge, profile }: DailyChallengePro
         
         {/* Background Image Container */}
         <div className="absolute inset-0 z-0 select-none overflow-hidden">
-          <img 
-            src="/daily-challenge-bg.jpg" 
+          <BackgroundImage 
+            src="/daily-challenge-bg.jpg"
+            fallbackSrc="/daily-challenge-bg.png"
             alt="The Jane Method Daily Challenge Detective Desk"
-            onError={(e) => {
-              const img = e.currentTarget;
-              if (!img.dataset.failed) {
-                img.dataset.failed = 'true';
-                img.src = '/daily-challenge-bg.png';
-              } else {
-                img.style.display = 'none';
-              }
-            }}
             className="w-full h-full object-cover object-center pointer-events-none scale-105"
-          />
-          {/* Subtle Dark Lighting Overlays for Text Legibility */}
-          <div className="absolute inset-0 bg-gradient-to-b from-[#090909]/80 via-transparent to-[#090909] pointer-events-none" />
-          <div className="absolute inset-0 bg-gradient-to-r from-[#090909]/85 via-black/30 to-[#090909]/75 pointer-events-none" />
-          <div className="absolute inset-0 film-grain opacity-20 mix-blend-overlay pointer-events-none" />
-          <div className="absolute inset-0 vignette-overlay opacity-80 pointer-events-none" />
+            gradientOverlayClassName="absolute inset-0 bg-gradient-to-r from-[#090909]/80 via-[#090909]/40 to-transparent pointer-events-none"
+          >
+            <div className="absolute inset-0 film-grain opacity-20 mix-blend-overlay pointer-events-none" />
+            <div className="absolute inset-0 vignette-overlay opacity-80 pointer-events-none" />
+          </BackgroundImage>
         </div>
 
         {/* HERO TOP BAR CONTENT */}

@@ -16,6 +16,7 @@ import {
   Paperclip
 } from 'lucide-react';
 import { UserProfile } from '../types';
+import { BackgroundImage } from './BackgroundImage';
 
 interface PracticeModeProps {
   onAddXp?: (amount: number, reason?: string) => void;
@@ -140,26 +141,13 @@ export function PracticeMode({ onAddXp }: PracticeModeProps) {
       <div className="relative rounded-2xl overflow-hidden border border-[#2a2a34] bg-[#0c0c0e] min-h-[380px] sm:min-h-[420px] p-6 sm:p-12 flex flex-col justify-between shadow-2xl group">
         
         {/* Background Detective Desk/Study Image */}
-        <img 
-          src="/practice-bg.jpg" 
-          alt="Practice Mode Detective Desk Background" 
-          onError={(e) => {
-            const img = e.currentTarget;
-            if (!img.dataset.failed) {
-              img.dataset.failed = 'true';
-              img.src = '/practice-bg.png';
-            } else {
-              img.style.display = 'none';
-            }
-          }}
-          className="absolute inset-0 w-full h-full object-cover object-center pointer-events-none opacity-90 transition-transform duration-700 group-hover:scale-105"
-        />
-
-        {/* Dark Overlay Gradient for High Contrast Readability */}
-        <div 
-          className="absolute inset-0 pointer-events-none"
-          style={{
-            background: 'linear-gradient(to right, rgba(9,9,11,0.85) 0%, rgba(9,9,11,0.6) 45%, rgba(9,9,11,0.2) 100%)'
+        <BackgroundImage 
+          src="/practice-bg.jpg"
+          fallbackSrc="/practice-bg.png"
+          alt="Practice Mode Detective Desk Background"
+          className="w-full h-full object-cover object-center pointer-events-none opacity-95 transition-transform duration-700 group-hover:scale-105"
+          gradientOverlayStyle={{
+            background: 'linear-gradient(to right, rgba(9,9,11,0.75) 0%, rgba(9,9,11,0.35) 50%, rgba(9,9,11,0.05) 100%)'
           }}
         />
 

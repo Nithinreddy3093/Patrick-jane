@@ -932,5 +932,517 @@ export const COURSE_MODULES: CourseModule[] = [
         ]
       }
     ]
+  },
+  {
+    id: 11,
+    title: "Module 11: Profiling & Cold Reading Masterclass",
+    subtitle: "Constructing Psychological Dossiers from Micro-Artifacts",
+    description: "Master rapid psychological profiling. Deduce occupation, lifestyle, habits, and background from clothing wear, accessories, posture, and conversational micro-signals.",
+    estimatedDuration: "50 mins",
+    difficulty: "Master",
+    iconName: "UserCheck",
+    xpValue: 500,
+    lessons: [
+      {
+        id: "m11-l1",
+        moduleId: 11,
+        title: "The Anatomic & Artifact Profiling Protocol",
+        durationMinutes: 25,
+        xpReward: 250,
+        introduction: "Every person unconsciously wears their autobiography on their body, clothing, and everyday carry items.",
+        conceptExplanation: {
+          heading: "Deductive Profiling Matrices",
+          body: "Clothing creases reveal daily posture and travel habits. Calluses on specific finger joints betray string instrument play, heavy lifting, or surgical instrument grips. Eyewear bridge wear indicates facial shape and optical prescription age. By correlating 3 or more independent physical artifacts, you can construct an accurate background profile without a single question.",
+          keyTakeaway: "A single clue is a hint; three convergent clues constitute a proof."
+        },
+        visualIllustration: {
+          title: "Micro-Artifact Triangulation Matrix",
+          type: "cards",
+          items: [
+            { label: "Hand Calluses & Nails", detail: "Dominant hand friction, chemical stains, instrumental calluses." },
+            { label: "Footwear Compression", detail: "Supination/pronation wear, driving heel scuffs, standing fatigue marks." },
+            { label: "Everyday Carry Artifacts", detail: "Key ring weight, phone screen oil patterns, wallet thickness." }
+          ]
+        },
+        interactiveExample: {
+          title: "Profile Audit: The Executive Traveler",
+          timerSeconds: 15,
+          imageUrl: "https://images.unsplash.com/photo-1507679799987-c73779587ccf?auto=format&fit=crop&w=800&q=80",
+          description: "Inspect the watch, cufflink, passport holder, and cuff wear of the traveler.",
+          questions: [
+            {
+              question: "A subject wears a watch set 10 minutes fast, has a distinct sleeve crease on the left elbow only, and a worn right shoe heel. What does this suggest?",
+              options: [
+                "Time-anxious personality, frequent desk writing/typing, and heavy vehicle accelerator usage",
+                "He bought his shoes yesterday and never drives",
+                "He is left-handed and sleeps on his stomach",
+                "He works as a marine diver"
+              ],
+              correctAnswer: "Time-anxious personality, frequent desk writing/typing, and heavy vehicle accelerator usage",
+              explanation: "Artificially advancing a clock shows time-anxieties, left elbow desk friction points to desk work, and right shoe heel scuff marks gas pedal pivoting."
+            }
+          ]
+        },
+        realLifePractice: {
+          title: "The 3-Artifact Stranger Profile",
+          location: "Transit station or coffee lounge",
+          durationMinutes: 15,
+          instructions: [
+            "Observe a stranger for 60 seconds.",
+            "Identify 3 distinct micro-artifacts (e.g. watch strap notch, shoe wear, ring mark).",
+            "Formulate 2 verifiable hypotheses about their lifestyle."
+          ],
+          checklist: [
+            "Hand & wrist inspection",
+            "Posture & shoulder tilt",
+            "Accessories & pocket bulge"
+          ]
+        },
+        reflection: {
+          prompt: "How did you separate observed facts from stereotypical prejudices?",
+          guidingQuestions: [
+            "Did you rely on clothing brand reputation or actual fabric condition?"
+          ]
+        },
+        quiz: [
+          {
+            id: "m11q1",
+            question: "In cold reading and psychological profiling, what is the 'Rainbow Ruse'?",
+            options: [
+              "A colorful umbrella display",
+              "A statement that credits the subject with two contrasting personality traits simultaneously (e.g., 'You are generally introverted, yet in the right company you can be the life of the party')",
+              "A magic trick involving light prisms",
+              "A deception detection test using colored lights"
+            ],
+            correctIndex: 1,
+            explanation: "The Rainbow Ruse covers both sides of a personality trait, ensuring the subject agrees with the statement regardless of their actual nature."
+          }
+        ]
+      }
+    ]
+  },
+  {
+    id: 12,
+    title: "Module 12: Advanced Memory Systems: The Major System",
+    subtitle: "Encoding Numbers, Names, Serial Codes & Chronology",
+    description: "Translate numerical data, license plates, timestamps, and card sequences into vivid permanent visual pegs using the centuries-old Major Memory System.",
+    estimatedDuration: "60 mins",
+    difficulty: "Master",
+    iconName: "Brain",
+    xpValue: 550,
+    lessons: [
+      {
+        id: "m12-l1",
+        moduleId: 12,
+        title: "The Major System Phonetic Matrix",
+        durationMinutes: 30,
+        xpReward: 275,
+        introduction: "Master the classic phonetic system that converts abstract numbers (0-9) into consonant sounds, turning any number into a mental picture.",
+        conceptExplanation: {
+          heading: "The Phonetic Code for Absolute Recall",
+          body: "Abstract numbers are notoriously difficult for the brain to remember. The Major System maps digits to consonant sounds: 0=S/Z, 1=T/D, 2=N, 3=M, 4=R, 5=L, 6=J/Ch/Sh, 7=K/G, 8=F/V, 9=P/B. Vowels carry no numerical value. Thus, the number 32 becomes M-N ('Moon'), and 74 becomes K-R ('Car').",
+          keyTakeaway: "When numbers become vivid physical objects, forgetting becomes nearly impossible."
+        },
+        visualIllustration: {
+          title: "Major System Digit-to-Sound Mapping",
+          type: "infographic",
+          items: [
+            { label: "1 = T / D", detail: "One downstroke (T)." },
+            { label: "2 = N", detail: "Two downstrokes (N)." },
+            { label: "3 = M", detail: "Three downstrokes (M)." },
+            { label: "4 = R", detail: "Last letter of FOUR is R." },
+            { label: "5 = L", detail: "5 fingers with thumb extended forms L." }
+          ]
+        },
+        interactiveExample: {
+          title: "Rapid Serial Code Memory Test",
+          timerSeconds: 15,
+          imageUrl: "https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?auto=format&fit=crop&w=800&q=80",
+          description: "Encode the 4-digit code '3274' using the Major System words 'Moon' + 'Car'.",
+          questions: [
+            {
+              question: "Using the Major System code (3=M, 2=N, 7=K, 4=R), what mental image encodes '3274'?",
+              options: [
+                "A Moon crashing into a Car",
+                "A Sun shining on a Boat",
+                "A Fish swimming in a Cup",
+                "A Dog chasing a Ball"
+              ],
+              correctAnswer: "A Moon crashing into a Car",
+              explanation: "32 translates to M-N (Moon) and 74 translates to K-R (Car). Combining them into a crashing scene anchors 3274 permanently."
+            }
+          ]
+        },
+        realLifePractice: {
+          title: "Phone Number & License Plate Pegging",
+          location: "Any street or office",
+          durationMinutes: 20,
+          instructions: [
+            "Select 3 license plates during your walk.",
+            "Convert the numbers into Major System words and anchor them to the vehicle's color."
+          ],
+          checklist: [
+            "Convert digits to consonant sounds",
+            "Insert vowels to form concrete nouns",
+            "Recall 3 hours later without notes"
+          ]
+        },
+        reflection: {
+          prompt: "Did converting numbers into physical images feel faster than repeating digits aloud?",
+          guidingQuestions: [
+            "How vivid were your visual interactions?"
+          ]
+        },
+        quiz: [
+          {
+            id: "m12q1",
+            question: "In the Major Memory System, which number is represented by the 'N' sound?",
+            options: ["1", "2", "3", "4"],
+            correctIndex: 1,
+            explanation: "The digit 2 has two vertical downstrokes, making it the phonetic 'N'."
+          }
+        ]
+      }
+    ]
+  },
+  {
+    id: 13,
+    title: "Module 13: Statement Analysis & Forensic Linguistics",
+    subtitle: "Deconstructing Spoken and Written Syntax for Truth",
+    description: "Analyze grammatical syntax, pronoun drops, temporal gaps, and passive voice to identify hidden anxiety, deceit, or omission in emails, transcripts, and interviews.",
+    estimatedDuration: "55 mins",
+    difficulty: "Master",
+    iconName: "FileText",
+    xpValue: 500,
+    lessons: [
+      {
+        id: "m13-l1",
+        moduleId: 13,
+        title: "Grammatical Clues & Pronoun Shift Analysis",
+        durationMinutes: 25,
+        xpReward: 250,
+        introduction: "Grammar is governed by the subconscious. When people lie or withhold, their syntax shifts predictably.",
+        conceptExplanation: {
+          heading: "The Mechanics of Linguistic Deception",
+          body: "Truthful statements feature direct ownership ('I took the laptop'). Deceptive statements often employ pronoun distancing ('The laptop was moved'), change in tense mid-sentence ('I was sitting there and suddenly he comes up'), or extraneous detail in the prelude with abrupt brevity during the core event.",
+          keyTakeaway: "Pay attention to changes in pronoun usage; a shift from 'we' to 'I' signals psychological distance or conflict."
+        },
+        visualIllustration: {
+          title: "Forensic Syntax Indicators",
+          type: "comparison",
+          items: [
+            { label: "Truthful Statement", detail: "Direct pronouns ('I'), chronological balance (20% intro, 60% event, 20% aftermath), emotional sensory detail." },
+            { label: "Deceptive Statement", detail: "Passive voice ('was moved'), disproportionate prelude (80% before event, 5% event), missing temporal transitions." }
+          ]
+        },
+        interactiveExample: {
+          title: "Transcript Analysis: The Alibi Audit",
+          timerSeconds: 15,
+          imageUrl: "https://images.unsplash.com/photo-1450133064473-71024230f91b?auto=format&fit=crop&w=800&q=80",
+          description: "Read the suspect's statement: 'I arrived at 8:00. We talked for a while. Later the safe was opened and the document was missing.'",
+          questions: [
+            {
+              question: "What major linguistic red flag is present in 'Later the safe was opened and the document was missing'?",
+              options: [
+                "Passive voice and pronoun removal ('was opened' instead of 'X opened it')",
+                "Excessive use of exclamation marks",
+                "Too many specific names",
+                "Overuse of past perfect verbs"
+              ],
+              correctAnswer: "Passive voice and pronoun removal ('was opened' instead of 'X opened it')",
+              explanation: "Removing the subject pronoun ('was opened') distances the speaker from the physical act of opening."
+            }
+          ]
+        },
+        realLifePractice: {
+          title: "Email & Message Syntax Audit",
+          location: "Inbox or case transcript",
+          durationMinutes: 15,
+          instructions: [
+            "Select 3 written explanations or apology emails.",
+            "Highlight all passive voice usages and pronoun drops."
+          ],
+          checklist: [
+            "Track 'I' vs 'We' transitions",
+            "Identify time jumps ('Next thing I knew')",
+            "Note word count distribution"
+          ]
+        },
+        reflection: {
+          prompt: "Did you notice any passive voice distance in your own writing when making excuses?",
+          guidingQuestions: ["Why does the brain instinctively avoid 'I' when uncomfortable?"]
+        },
+        quiz: [
+          {
+            id: "m13q1",
+            question: "Why do deceptive statements often have an oversized prelude (background setup) compared to the actual event?",
+            options: [
+              "Because the speaker loves history",
+              "Because the prelude contains true non-incriminating facts where the speaker feels safe, while delaying the fabricated core event",
+              "Because it uses more adjectives",
+              "Because truthful people never give background details"
+            ],
+            correctIndex: 1,
+            explanation: "Liars stall in truthful setup details to build credibility before rushing past the fabricated event."
+          }
+        ]
+      }
+    ]
+  },
+  {
+    id: 14,
+    title: "Module 14: Subconscious Priming & Influence Dynamics",
+    subtitle: "Ericksonian Metaphors, Verbal Anchoring & Strategic Framing",
+    description: "Learn how subtle choice framing, sensory vocabulary, and psychological priming guide decision-making and build instant rapport without friction.",
+    estimatedDuration: "50 mins",
+    difficulty: "Master",
+    iconName: "Zap",
+    xpValue: 600,
+    lessons: [
+      {
+        id: "m14-l1",
+        moduleId: 14,
+        title: "Sensory Language Mirroring & Anchoring",
+        durationMinutes: 25,
+        xpReward: 300,
+        introduction: "Influence is not about forcing agreement; it is about pacing the other person's reality before leading them.",
+        conceptExplanation: {
+          heading: "Pacing & Leading Dynamics",
+          body: "People process reality primarily through Visual ('I see what you mean'), Auditory ('That sounds right'), or Kinesthetic ('I feel we are on solid ground') language modalities. Matching a subject's dominant sensory vocabulary lowers critical defense filters and creates deep subconscious rapport.",
+          keyTakeaway: "Match their linguistic modality first (Pacing), then steer the direction (Leading)."
+        },
+        visualIllustration: {
+          title: "Sensory Modality Indicators",
+          type: "cards",
+          items: [
+            { label: "Visual Processing", detail: "Keywords: see, look, picture, clear, bright. Rapid speech tone." },
+            { label: "Auditory Processing", detail: "Keywords: hear, sound, listen, resonance, harmonious. Melodic tone." },
+            { label: "Kinesthetic Processing", detail: "Keywords: feel, grasp, heavy, solid, warm, contact. Slower cadence." }
+          ]
+        },
+        interactiveExample: {
+          title: "Dialogue Analysis: The Rapport Test",
+          timerSeconds: 15,
+          imageUrl: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=800&q=80",
+          description: "Subject states: 'I just can't picture how this proposal fits into our strategy.'",
+          questions: [
+            {
+              question: "What is the most effective response to pace their Visual modality?",
+              options: [
+                "'Let me show you a clear diagram so you can see the big picture.'",
+                "'Let's listen to how the sound of this rings in your ears.'",
+                "'I feel we should grasp the heavy details firmly.'",
+                "'Why don't you understand?'"
+              ],
+              correctAnswer: "'Let me show you a clear diagram so you can see the big picture.'",
+              explanation: "Using visual vocabulary ('show', 'clear', 'see', 'picture') directly aligns with the subject's internal processing style."
+            }
+          ]
+        },
+        realLifePractice: {
+          title: "The Modality Matching Drill",
+          location: "Next 2 conversations",
+          durationMinutes: 15,
+          instructions: [
+            "Listen for sensory verbs in the first 2 minutes of a conversation.",
+            "Reply using at least 2 words matching their dominant modality."
+          ],
+          checklist: [
+            "Classify speaker: Visual / Auditory / Kinesthetic",
+            "Mirror key sensory verbs",
+            "Observe rapport acceleration"
+          ]
+        },
+        reflection: {
+          prompt: "Did the conversation feel noticeably smoother when you mirrored their sensory vocabulary?",
+          guidingQuestions: ["Which modality is your own personal default?"]
+        },
+        quiz: [
+          {
+            id: "m14q1",
+            question: "What does 'Pacing' mean in psychological influence?",
+            options: [
+              "Walking back and forth in a room",
+              "Matching the subject's current state, language, or posture to establish rapport before introducing change",
+              "Speaking as fast as possible",
+              "Counting the seconds between questions"
+            ],
+            correctIndex: 1,
+            explanation: "Pacing validates the subject's present reality, creating trust that allows leading them toward a conclusion."
+          }
+        ]
+      }
+    ]
+  },
+  {
+    id: 15,
+    title: "Module 15: Cyber-Deduction & OSINT Digital Profiling",
+    subtitle: "Applying Deductive Logic to Digital Footprints & Online Artifacts",
+    description: "Extend observational deduction to the digital realm: image metadata analysis, writing style matching (stylometry), online schedule profiling, and open-source intelligence.",
+    estimatedDuration: "45 mins",
+    difficulty: "Master",
+    iconName: "Globe",
+    xpValue: 500,
+    lessons: [
+      {
+        id: "m15-l1",
+        moduleId: 15,
+        title: "Digital Artifact Triangulation & Photo Intelligence",
+        durationMinutes: 20,
+        xpReward: 250,
+        introduction: "A single digital photograph contains hundreds of environmental clues: sun angles, reflections, power outlets, and background signage.",
+        conceptExplanation: {
+          heading: "GEOINT & Environmental Digital Deduction",
+          body: "Shadow length and direction reveal exact solar time and hemisphere location. Electrical socket types identify region/country. Reflections in sunglasses or glossy tabletop surfaces reveal what lies outside the frame. Stylometry (counting word frequency and punctuation habits) links anonymous text to known authors.",
+          keyTakeaway: "The digital world is not virtual; it is a direct reflection of physical reality."
+        },
+        visualIllustration: {
+          title: "Digital Photo Deduction Matrix",
+          type: "timeline",
+          items: [
+            { label: "1. Solar & Shadow Angle", detail: "Calculate sun position -> determine time of day and latitude." },
+            { label: "2. Infrastructure Clues", detail: "Power outlet shapes, street signs, license plate formats." },
+            { label: "3. Reflection Audit", detail: "Analyze pupil reflections, glass panes, and metallic surfaces." }
+          ]
+        },
+        interactiveExample: {
+          title: "Digital Image Investigation",
+          timerSeconds: 15,
+          imageUrl: "https://images.unsplash.com/photo-1526772662000-3f88f10405ff?auto=format&fit=crop&w=800&q=80",
+          description: "Analyze the window shadow angle, three-prong Type G socket, and coffee cup logo.",
+          questions: [
+            {
+              question: "A photo shows a Type G three-pin socket, cars driving on the left side of the street outside, and a morning shadow pointing Northwest. What location & time is deduced?",
+              options: [
+                "United Kingdom / Ireland / Singapore in mid-morning",
+                "United States / Canada in late afternoon",
+                "Germany / France at noon",
+                "Brazil / Argentina in early morning"
+              ],
+              correctAnswer: "United Kingdom / Ireland / Singapore in mid-morning",
+              explanation: "Type G sockets combined with left-hand traffic pinpoints UK/Ireland/Singapore, and morning sun in the southeast casts shadows toward the northwest."
+            }
+          ]
+        },
+        realLifePractice: {
+          title: "The Open Source Image Audit",
+          location: "Any online photo or news image",
+          durationMinutes: 15,
+          instructions: [
+            "Select an uncaptioned street photo.",
+            "List 4 distinct physical clues that verify continent, season, and time of day."
+          ],
+          checklist: [
+            "Power grid / socket infrastructure",
+            "Vegetation & foliage season",
+            "Traffic flow side & vehicle models"
+          ]
+        },
+        reflection: {
+          prompt: "How much location information do you accidentally broadcast in your own personal photos?",
+          guidingQuestions: ["Did you check background reflections in your recent uploads?"]
+        },
+        quiz: [
+          {
+            id: "m15q1",
+            question: "What is 'Stylometry' in digital forensic analysis?",
+            options: [
+              "Measuring fashion clothing styles",
+              "The statistical study of linguistic style and word usage habits to identify anonymous authorship",
+              "Designing websites",
+              "Editing photo colors"
+            ],
+            correctIndex: 1,
+            explanation: "Stylometry analyzes punctuation patterns, vocabulary frequency, and sentence length to match anonymous writing to specific authors."
+          }
+        ]
+      }
+    ]
+  },
+  {
+    id: 16,
+    title: "Module 16: Non-Verbal Deception & Kinesics Mastery",
+    subtitle: "Evaluating Postural Shifts, Pacifying Behaviors & Eye Myths",
+    description: "Separate real non-verbal science from popular myths. Learn to detect genuine autonomic nervous system stress, pacifying adapters, and spatial territory claims.",
+    estimatedDuration: "50 mins",
+    difficulty: "Master",
+    iconName: "ShieldCheck",
+    xpValue: 500,
+    lessons: [
+      {
+        id: "m16-l1",
+        moduleId: 16,
+        title: "Autonomic Stress Indicators & Pacifying Touch",
+        durationMinutes: 22,
+        xpReward: 250,
+        introduction: "When human beings experience psychological discomfort, the limbic system commands instant self-soothing behaviors.",
+        conceptExplanation: {
+          heading: "The Limbic Response & Pacifiers",
+          body: "When threatened or anxious, humans revert to three limbic responses: Freeze, Flight, or Fight. To regulate spiking adrenaline, we perform pacifying behaviors: touching the suprasternal notch (neck dimple), adjusting shirt collars, ventilating hair, or rubbing thighs. These do NOT prove a lie—they prove felt stress.",
+          keyTakeaway: "Pacifiers signal emotional discomfort; your job is to find the trigger that caused it."
+        },
+        visualIllustration: {
+          title: "Limbic Stress Cascade",
+          type: "infographic",
+          items: [
+            { label: "1. Stimulus Trigger", detail: "A direct question or unexpected photo is shown." },
+            { label: "2. Limbic Spiking", detail: "Heart rate increases, pupil dilation, dry mouth." },
+            { label: "3. Pacifying Touch", detail: "Neck touch, ring twisting, collar pulling, leg wiping." }
+          ]
+        },
+        interactiveExample: {
+          title: "Interrogation Posture Analysis",
+          timerSeconds: 15,
+          imageUrl: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=800&q=80",
+          description: "Observe the subject's hand placement over the neck dimple immediately after a name is mentioned.",
+          questions: [
+            {
+              question: "A suspect touches their neck dimple (suprasternal notch) right when a name is spoken. What does this indicate?",
+              options: [
+                "Instant limbic stress and a need to self-soothe",
+                "They have a sore throat",
+                "Proof that they are guilty of murder",
+                "They are bored and sleepy"
+              ],
+              correctAnswer: "Instant limbic stress and a need to self-soothe",
+              explanation: "Covering the neck dimple is a protective limbic response to sudden anxiety or felt vulnerability."
+            }
+          ]
+        },
+        realLifePractice: {
+          title: "Pacifier Spotting in High-Stakes Situations",
+          location: "News interview or debate broadcast",
+          durationMinutes: 15,
+          instructions: [
+            "Watch a live interview.",
+            "Count the number of pacifying behaviors (neck touch, collar pull, lip compression) during tough questions."
+          ],
+          checklist: [
+            "Establish relaxed baseline first",
+            "Note exact trigger question",
+            "Identify pacifying gesture type"
+          ]
+        },
+        reflection: {
+          prompt: "What is your own personal go-to pacifying habit when nervous?",
+          guidingQuestions: ["Do you touch your hair, adjust your watch, or tap your foot?"]
+        },
+        quiz: [
+          {
+            id: "m16q1",
+            question: "Why is the popular belief that 'looking up and to the left means lying' scientifically inaccurate?",
+            options: [
+              "Because people only look down when lying",
+              "Because peer-reviewed research shows eye direction does not reliably correlate with deception across individuals",
+              "Because eyes never move during speech",
+              "Because left-handed people have no eyes"
+            ],
+            correctIndex: 1,
+            explanation: "Scientific studies consistently show that eye movement direction alone does not correlate with truth or lying; baseline deviation is required."
+          }
+        ]
+      }
+    ]
   }
 ];
+

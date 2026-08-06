@@ -1,5 +1,5 @@
-import { useState } from 'react';
-import { motion } from 'motion/react';
+import { useState, useRef, useEffect } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
 import { 
   Home, 
   BookOpen, 
@@ -11,7 +11,11 @@ import {
   Menu, 
   X,
   Bell,
-  ChevronDown
+  ChevronDown,
+  LogOut,
+  LogIn,
+  Sparkles,
+  ShieldCheck
 } from 'lucide-react';
 import { NavigationTab, UserProfile } from '../types';
 
@@ -19,11 +23,35 @@ interface NavbarProps {
   activeTab: NavigationTab;
   onSelectTab: (tab: NavigationTab) => void;
   profile: UserProfile;
+  authUser?: any;
+  onOpenAuthModal: () => void;
+  onSignOut: () => Promise<void>;
 }
 
-export function Navbar({ activeTab, onSelectTab, profile }: NavbarProps) {
+export function Navbar({ 
+  activeTab, 
+  onSelectTab, 
+  profile,
+  authUser,
+  onOpenAuthModal,
+  onSignOut
+}: NavbarProps) {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [dropdownOpen, setDropdownOpen] = useState(false);
+  const dropdownRef = useRef<HTMLDivElement>(null);
 
+  // Close dropdown on click outside
+  useEffect(() => {
+    function handleClickOutside(event: MouseEvent) {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
+        setDropdownOpen(false);
+      }
+    }
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, []);
+
+  // Filter nav items: Hide 'profile' tab if unauthenticated
   const navItems: { id: NavigationTab; label: string; icon: any }[] = [
     { id: 'home', label: 'Home', icon: Home },
     { id: 'course', label: 'Course', icon: BookOpen },
@@ -31,8 +59,16 @@ export function Navbar({ activeTab, onSelectTab, profile }: NavbarProps) {
     { id: 'detective-lab', label: 'Detective Lab', icon: Search },
     { id: 'daily-challenge', label: 'Daily Challenge', icon: Calendar },
     { id: 'mentor', label: 'Mentor', icon: Bot },
-    { id: 'profile', label: 'Profile', icon: User },
+    ...(authUser ? [{ id: 'profile' as NavigationTab, label: 'Profile', icon: User }] : [])
   ];
+
+  const handleNavClick = (tab: NavigationTab) => {
+    if (!authUser && tab !== 'home') {
+      onOpenAuthModal();
+    } else {
+      onSelectTab(tab);
+    }
+  };
 
   return (
     <motion.header 
@@ -43,12 +79,11 @@ export function Navbar({ activeTab, onSelectTab, profile }: NavbarProps) {
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
         
-        {/* Left Side: Minimal Gold Smiley Logo & Brand Title */}
+        {/* Left Side: Logo & Title */}
         <div 
           onClick={() => onSelectTab('home')}
           className="flex items-center gap-3 cursor-pointer group shrink-0"
         >
-          {/* Minimal Gold Smiley Icon */}
           <div className="w-10 h-10 rounded-full border border-[#D4AF37] bg-[#141414] flex items-center justify-center p-1.5 shadow-md shadow-[#D4AF37]/10 group-hover:border-[#F5D982] transition-all">
             <svg 
               viewBox="0 0 100 100" 
@@ -78,7 +113,7 @@ export function Navbar({ activeTab, onSelectTab, profile }: NavbarProps) {
             return (
               <button
                 key={item.id}
-                onClick={() => onSelectTab(item.id)}
+                onClick={() => handleNavClick(item.id)}
                 className={`relative py-1 text-xs font-medium tracking-wide transition-all cursor-pointer ${
                   isActive
                     ? 'text-white font-semibold'
@@ -94,42 +129,111 @@ export function Navbar({ activeTab, onSelectTab, profile }: NavbarProps) {
           })}
         </nav>
 
-        {/* Right Side: Start Learning Button, Bell & Profile Avatar */}
-        <div className="flex items-center gap-3 sm:gap-4">
-          <button
-            onClick={() => onSelectTab('course')}
-            className="hidden md:flex items-center gap-2 border border-[#D4AF37] text-[#F5F5F5] hover:bg-[#D4AF37]/15 rounded-lg px-4 py-2 text-xs font-semibold tracking-wider transition-all cursor-pointer hover:border-[#F5D982]"
-          >
-            <span>Start Learning</span>
-          </button>
+        {/* Right Side Controls */}
+        <div className="flex items-center gap-2 sm:gap-3">
+          {/* BEFORE LOGIN: Show ONLY "Sign In" and "Get Started" buttons */}
+          {!authUser ? (
+            <>
+              <button
+                onClick={onOpenAuthModal}
+                className="flex items-center gap-2 text-zinc-300 hover:text-white text-xs font-mono uppercase tracking-wider px-3.5 py-2 transition-colors cursor-pointer"
+              >
+                <LogIn className="w-3.5 h-3.5 text-[#D4AF37]" />
+                <span>Sign In</span>
+              </button>
 
-          {/* Bell Icon with badge */}
-          <button className="w-9 h-9 rounded-full bg-[#141418] border border-[#282832] flex items-center justify-center text-zinc-300 hover:text-white transition-colors relative cursor-pointer">
-            <Bell className="w-4 h-4" />
-            <span className="absolute top-2 right-2 w-1.5 h-1.5 rounded-full bg-[#D4AF37]" />
-          </button>
+              <button
+                onClick={onOpenAuthModal}
+                className="flex items-center gap-2 border border-[#D4AF37] bg-[#D4AF37] text-black hover:bg-[#e2be4a] rounded-xl px-4 py-2 text-xs font-bold uppercase tracking-wider transition-all cursor-pointer shadow-lg shadow-[#D4AF37]/15"
+              >
+                <Sparkles className="w-3.5 h-3.5" />
+                <span>Get Started</span>
+              </button>
+            </>
+          ) : (
+            /* AFTER LOGIN: Display Notification Icon, Avatar, and Dropdown */
+            <>
+              {/* Notification Icon */}
+              <button 
+                aria-label="Notifications"
+                className="w-9 h-9 rounded-full bg-[#141418] border border-[#282832] flex items-center justify-center text-zinc-300 hover:text-white transition-colors relative cursor-pointer"
+              >
+                <Bell className="w-4 h-4" />
+                <span className="absolute top-2 right-2 w-1.5 h-1.5 rounded-full bg-[#D4AF37]" />
+              </button>
 
-          {/* User Profile Chip */}
-          <div 
-            onClick={() => onSelectTab('profile')}
-            className="flex items-center gap-2 cursor-pointer p-1 rounded-full hover:bg-zinc-800/50 transition-colors"
-          >
-            <div className="w-8 h-8 rounded-full overflow-hidden border border-[#D4AF37]/50 bg-zinc-800 shrink-0">
-              <img 
-                src={profile.avatarUrl || "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=150&q=80"} 
-                alt={profile.name} 
-                className="w-full h-full object-cover"
-              />
-            </div>
-            <ChevronDown className="w-3.5 h-3.5 text-zinc-400 hidden sm:block" />
-          </div>
+              {/* User Dropdown */}
+              <div className="relative" ref={dropdownRef}>
+                <button 
+                  onClick={() => setDropdownOpen(!dropdownOpen)}
+                  className="flex items-center gap-2 cursor-pointer p-1 rounded-full hover:bg-zinc-800/50 transition-colors border border-[#D4AF37]/40 bg-[#12100d]"
+                >
+                  <div className="w-8 h-8 rounded-full overflow-hidden bg-zinc-800 shrink-0">
+                    <img 
+                      src={authUser?.photoURL || profile.avatarUrl || "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=150&q=80"} 
+                      alt={profile.name} 
+                      className="w-full h-full object-cover"
+                    />
+                  </div>
+                  <ChevronDown className={`w-3.5 h-3.5 text-zinc-400 mr-1 transition-transform ${dropdownOpen ? 'rotate-180' : ''}`} />
+                </button>
+
+                <AnimatePresence>
+                  {dropdownOpen && (
+                    <motion.div
+                      initial={{ opacity: 0, y: 8, scale: 0.96 }}
+                      animate={{ opacity: 1, y: 0, scale: 1 }}
+                      exit={{ opacity: 0, y: 8, scale: 0.96 }}
+                      transition={{ duration: 0.15 }}
+                      className="absolute right-0 mt-2 w-56 bg-[#0e0c0a] border border-[#3d3124] rounded-2xl shadow-2xl p-2 z-50 overflow-hidden"
+                    >
+                      <div className="px-3 py-2.5 border-b border-[#231d16] mb-1">
+                        <div className="flex items-center gap-1.5 text-[9px] font-mono text-[#D4AF37] font-bold uppercase tracking-wider">
+                          <ShieldCheck className="w-3 h-3" />
+                          <span>Active Detective</span>
+                        </div>
+                        <div className="font-serif font-bold text-sm text-white truncate mt-0.5">
+                          {profile.name || 'Observer'}
+                        </div>
+                        <div className="text-[10px] font-mono text-zinc-400 truncate">
+                          {authUser.email || 'Google Observer'}
+                        </div>
+                      </div>
+
+                      <button
+                        onClick={() => {
+                          setDropdownOpen(false);
+                          onSelectTab('profile');
+                        }}
+                        className="w-full text-left px-3 py-2 rounded-xl text-xs text-zinc-300 hover:text-white hover:bg-[#1a1510] flex items-center gap-2.5 transition-colors cursor-pointer font-medium"
+                      >
+                        <User className="w-4 h-4 text-[#D4AF37]" />
+                        <span>View Profile</span>
+                      </button>
+
+                      <button
+                        onClick={async () => {
+                          setDropdownOpen(false);
+                          await onSignOut();
+                        }}
+                        className="w-full text-left px-3 py-2 rounded-xl text-xs text-red-400 hover:bg-red-950/40 flex items-center gap-2.5 transition-colors cursor-pointer font-medium mt-1"
+                      >
+                        <LogOut className="w-4 h-4 text-red-400" />
+                        <span>Sign Out</span>
+                      </button>
+                    </motion.div>
+                  )}
+                </AnimatePresence>
+              </div>
+            </>
+          )}
 
           {/* Mobile Hamburger Button */}
           <button
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-            className="lg:hidden p-2 rounded-xl bg-[#141414] text-[#F5F5F5] hover:text-[#D4AF37] border border-[#262626] cursor-pointer"
+            className="lg:hidden p-2 rounded-xl bg-[#141414] text-[#F5F5F5] hover:text-[#D4AF37] border border-[#262626] cursor-pointer ml-1"
           >
-            {mobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
+            {mobileMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
           </button>
         </div>
       </div>
@@ -144,7 +248,7 @@ export function Navbar({ activeTab, onSelectTab, profile }: NavbarProps) {
               <button
                 key={item.id}
                 onClick={() => {
-                  onSelectTab(item.id);
+                  handleNavClick(item.id);
                   setMobileMenuOpen(false);
                 }}
                 className={`w-full flex items-center gap-3 p-3 rounded-xl text-sm font-medium transition-all ${
@@ -159,15 +263,19 @@ export function Navbar({ activeTab, onSelectTab, profile }: NavbarProps) {
             );
           })}
 
-          <button
-            onClick={() => {
-              onSelectTab('course');
-              setMobileMenuOpen(false);
-            }}
-            className="w-full mt-4 py-3 rounded-lg bg-[#D4AF37] text-[#090909] font-bold text-xs uppercase tracking-wider cursor-pointer text-center"
-          >
-            Start Learning
-          </button>
+          {!authUser && (
+            <div className="pt-2 flex flex-col gap-2">
+              <button
+                onClick={() => {
+                  onOpenAuthModal();
+                  setMobileMenuOpen(false);
+                }}
+                className="w-full py-3 rounded-xl bg-[#D4AF37] text-black font-bold text-xs uppercase tracking-wider text-center cursor-pointer shadow-lg"
+              >
+                Sign In / Get Started
+              </button>
+            </div>
+          )}
         </div>
       )}
     </motion.header>

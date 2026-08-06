@@ -19,6 +19,8 @@ export type RankTitle =
 
 export interface UserProfile {
   name: string;
+  email?: string;
+  googleUid?: string;
   avatarUrl?: string;
   xp: number;
   rank: RankTitle;

@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
 import { 
   Flame, 
   Star, 
@@ -12,10 +12,20 @@ import {
   Crown,
   Pin,
   BookOpen,
-  Move
+  Filter,
+  UserCheck,
+  Zap,
+  Globe,
+  FileText,
+  ShieldCheck,
+  Sparkles,
+  Clock,
+  Award
 } from 'lucide-react';
 import { UserProfile } from '../types';
 import { DraggableFolder } from './DraggableFolder';
+import { BackgroundImage } from './BackgroundImage';
+import { COURSE_MODULES } from '../data/modulesData';
 
 interface CourseListProps {
   onSelectModule: (moduleId: number) => void;
@@ -24,15 +34,38 @@ interface CourseListProps {
 }
 
 export function CourseList({ onSelectModule, profile }: CourseListProps) {
-  const [selectedPath, setSelectedPath] = useState<number | null>(null);
+  const [searchQuery, setSearchQuery] = useState('');
+  const [difficultyFilter, setDifficultyFilter] = useState<'All' | 'Beginner' | 'Intermediate' | 'Advanced' | 'Master'>('All');
+
+  const filteredModules = useMemo(() => {
+    return COURSE_MODULES.filter((module) => {
+      const matchesSearch = 
+        module.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        module.subtitle.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        module.description.toLowerCase().includes(searchQuery.toLowerCase());
+      
+      const matchesDifficulty = 
+        difficultyFilter === 'All' || module.difficulty === difficultyFilter;
+
+      return matchesSearch && matchesDifficulty;
+    });
+  }, [searchQuery, difficultyFilter]);
 
   const learningPathModules = [
+    {
+      id: 0,
+      num: "00",
+      title: "INTRODUCTION",
+      icon: Eye,
+      status: profile.completedModuleIds?.includes(0) ? "completed" : "unlocked",
+      bgImage: "https://images.unsplash.com/photo-1516321318423-f06f85e504b3?auto=format&fit=crop&w=400&q=80"
+    },
     {
       id: 1,
       num: "01",
       title: "OBSERVATION",
       icon: Eye,
-      status: "completed",
+      status: profile.completedModuleIds?.includes(1) ? "completed" : "unlocked",
       bgImage: "https://images.unsplash.com/photo-1516321318423-f06f85e504b3?auto=format&fit=crop&w=400&q=80"
     },
     {
@@ -40,42 +73,49 @@ export function CourseList({ onSelectModule, profile }: CourseListProps) {
       num: "02",
       title: "READING PEOPLE",
       icon: Brain,
-      status: "locked",
+      status: profile.completedModuleIds?.includes(2) ? "completed" : "unlocked",
       bgImage: "https://images.unsplash.com/photo-1507679799987-c73779587ccf?auto=format&fit=crop&w=400&q=80"
     },
     {
       id: 3,
       num: "03",
-      title: "PATTERN RECOGNITION",
+      title: "PATTERNS",
       icon: Search,
-      status: "locked",
+      status: profile.completedModuleIds?.includes(3) ? "completed" : "unlocked",
       bgImage: "https://images.unsplash.com/photo-1451187580459-43490279c0fa?auto=format&fit=crop&w=400&q=80"
     },
     {
       id: 4,
       num: "04",
-      title: "PATTERN RECOGNITION",
+      title: "MEMORY LOCI",
       icon: Brain,
-      status: "locked",
+      status: profile.completedModuleIds?.includes(4) ? "completed" : "unlocked",
       bgImage: "https://images.unsplash.com/photo-1559757175-5700dde675bc?auto=format&fit=crop&w=400&q=80"
     },
     {
       id: 5,
       num: "05",
-      title: "MEMORY DEDUCTION",
+      title: "LOGICAL DEDUCTION",
       icon: Search,
-      status: "locked",
+      status: profile.completedModuleIds?.includes(5) ? "completed" : "unlocked",
       bgImage: "https://images.unsplash.com/photo-1528819622765-d6bcf132f793?auto=format&fit=crop&w=400&q=80"
-    },
-    {
-      id: 6,
-      num: "06",
-      title: "PSYCHOLOGY",
-      icon: Crown,
-      status: "locked",
-      bgImage: "https://images.unsplash.com/photo-1507413245164-6160d8298b31?auto=format&fit=crop&w=400&q=80"
     }
   ];
+
+  const getModuleIcon = (iconName: string) => {
+    switch (iconName) {
+      case 'Eye': return Eye;
+      case 'Brain': return Brain;
+      case 'Search': return Search;
+      case 'Crown': return Crown;
+      case 'UserCheck': return UserCheck;
+      case 'Zap': return Zap;
+      case 'Globe': return Globe;
+      case 'FileText': return FileText;
+      case 'ShieldCheck': return ShieldCheck;
+      default: return BookOpen;
+    }
+  };
 
   return (
     <div className="min-h-screen text-white bg-[#09090b] pt-24 pb-16 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto space-y-8">
@@ -87,26 +127,13 @@ export function CourseList({ onSelectModule, profile }: CourseListProps) {
         <div className="lg:col-span-8 relative rounded-2xl overflow-hidden border border-[#2a2a34] bg-[#0c0c0e] min-h-[420px] p-8 sm:p-12 flex flex-col justify-between shadow-2xl group">
           
           {/* Main Background Image */}
-          <img 
-            src="/course-bg.jpg" 
-            alt="The Academy Study Desk" 
-            onError={(e) => {
-              const img = e.currentTarget;
-              if (!img.dataset.failed) {
-                img.dataset.failed = 'true';
-                img.src = '/course-bg.png';
-              } else {
-                img.style.display = 'none';
-              }
-            }}
-            className="absolute inset-0 w-full h-full object-cover object-center pointer-events-none opacity-90 transition-transform duration-700 group-hover:scale-105"
-          />
-
-          {/* Dark Gradient Overlay for Maximum Text Contrast */}
-          <div 
-            className="absolute inset-0 pointer-events-none"
-            style={{
-              background: 'linear-gradient(to right, rgba(9,9,11,0.85) 0%, rgba(9,9,11,0.6) 45%, rgba(9,9,11,0.2) 100%)'
+          <BackgroundImage 
+            src="/course-bg.jpg"
+            fallbackSrc="/course-bg.png"
+            alt="The Academy Study Desk"
+            className="w-full h-full object-cover object-center pointer-events-none opacity-95 transition-transform duration-700 group-hover:scale-105"
+            gradientOverlayStyle={{
+              background: 'linear-gradient(to right, rgba(9,9,11,0.75) 0%, rgba(9,9,11,0.35) 50%, rgba(9,9,11,0.05) 100%)'
             }}
           />
 
@@ -447,6 +474,172 @@ export function CourseList({ onSelectModule, profile }: CourseListProps) {
 
       </div>
 
+      {/* SECTION 4: ALL ACADEMY CURRICULUM GRID */}
+      <div className="rounded-2xl border border-[#262633] bg-[#0c0c0e] p-6 sm:p-8 space-y-6 shadow-2xl">
+        
+        {/* Section Header & Controls */}
+        <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-[#1f1f2a] pb-6">
+          <div>
+            <div className="flex items-center gap-2">
+              <span className="text-[10px] font-mono tracking-widest text-[#D4AF37] font-bold uppercase">
+                COMPLETE MENTALIST CURRICULUM
+              </span>
+              <Sparkles className="w-3.5 h-3.5 text-[#D4AF37]" />
+            </div>
+            <h2 className="font-serif text-2xl font-bold text-white tracking-tight mt-1">
+              Explore All Training Modules ({COURSE_MODULES.length})
+            </h2>
+          </div>
+
+          {/* Search & Filter Controls */}
+          <div className="flex flex-wrap items-center gap-3">
+            {/* Search Input */}
+            <div className="relative min-w-[220px]">
+              <Search className="w-4 h-4 text-zinc-400 absolute left-3 top-1/2 -translate-y-1/2" />
+              <input
+                type="text"
+                placeholder="Search modules..."
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                className="w-full bg-[#14141c] border border-[#282838] rounded-xl pl-9 pr-4 py-2 text-xs text-white placeholder-zinc-500 focus:outline-none focus:border-[#D4AF37] transition-all"
+              />
+            </div>
+
+            {/* Difficulty Filter Pills */}
+            <div className="flex items-center gap-1 bg-[#14141c] p-1 rounded-xl border border-[#282838]">
+              {(['All', 'Beginner', 'Intermediate', 'Advanced', 'Master'] as const).map((diff) => (
+                <button
+                  key={diff}
+                  onClick={() => setDifficultyFilter(diff)}
+                  className={`px-3 py-1.5 rounded-lg text-[11px] font-medium transition-all cursor-pointer ${
+                    difficultyFilter === diff
+                      ? 'bg-[#D4AF37] text-[#09090b] font-bold shadow-md'
+                      : 'text-zinc-400 hover:text-white hover:bg-white/5'
+                  }`}
+                >
+                  {diff}
+                </button>
+              ))}
+            </div>
+          </div>
+        </div>
+
+        {/* Modules Grid */}
+        {filteredModules.length === 0 ? (
+          <div className="text-center py-16 space-y-3">
+            <Search className="w-10 h-10 text-zinc-600 mx-auto" />
+            <p className="text-sm text-zinc-400">No training modules found matching your search criteria.</p>
+            <button
+              onClick={() => { setSearchQuery(''); setDifficultyFilter('All'); }}
+              className="text-xs text-[#D4AF37] font-semibold underline cursor-pointer"
+            >
+              Reset Filters
+            </button>
+          </div>
+        ) : (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {filteredModules.map((module) => {
+              const ModuleIcon = getModuleIcon(module.iconName);
+              const isCompleted = profile.completedModuleIds?.includes(module.id);
+              
+              const difficultyColors = {
+                Beginner: 'bg-emerald-500/10 text-emerald-400 border-emerald-500/30',
+                Intermediate: 'bg-blue-500/10 text-blue-400 border-blue-500/30',
+                Advanced: 'bg-amber-500/10 text-amber-400 border-amber-500/30',
+                Master: 'bg-[#D4AF37]/15 text-[#F5D982] border-[#D4AF37]/40'
+              };
+
+              return (
+                <div
+                  key={module.id}
+                  onClick={() => onSelectModule(module.id)}
+                  className={`group relative rounded-2xl bg-[#0e0e12] border p-6 flex flex-col justify-between transition-all duration-300 cursor-pointer hover:-translate-y-1 shadow-xl hover:shadow-2xl hover:shadow-[#D4AF37]/10 ${
+                    isCompleted 
+                      ? 'border-emerald-500/40 hover:border-emerald-400' 
+                      : 'border-[#22222e] hover:border-[#D4AF37]'
+                  }`}
+                >
+                  {/* Top Badge Row */}
+                  <div className="flex items-center justify-between mb-4">
+                    <span className="text-[10px] font-mono tracking-widest text-[#D4AF37] font-bold uppercase bg-[#181822] px-2.5 py-1 rounded-md border border-[#2a2a3a]">
+                      MODULE {module.id < 10 ? `0${module.id}` : module.id}
+                    </span>
+
+                    <div className="flex items-center gap-2">
+                      <span className={`text-[10px] font-semibold px-2.5 py-0.5 rounded-full border ${difficultyColors[module.difficulty]}`}>
+                        {module.difficulty}
+                      </span>
+                      {isCompleted && (
+                        <CheckCircle2 className="w-4 h-4 text-emerald-400 fill-emerald-400/20" />
+                      )}
+                    </div>
+                  </div>
+
+                  {/* Main Content */}
+                  <div className="space-y-2 mb-6">
+                    <div className="flex items-start gap-3">
+                      <div className="w-10 h-10 rounded-xl bg-[#181824] border border-[#333348] group-hover:border-[#D4AF37] flex items-center justify-center text-[#D4AF37] shrink-0 transition-colors shadow-inner">
+                        <ModuleIcon className="w-5 h-5" />
+                      </div>
+                      <div>
+                        <h3 className="font-serif text-base font-bold text-white group-hover:text-[#F5D982] transition-colors leading-snug">
+                          {module.title}
+                        </h3>
+                        <p className="text-xs text-[#D4AF37] font-medium mt-0.5">
+                          {module.subtitle}
+                        </p>
+                      </div>
+                    </div>
+
+                    <p className="text-xs text-zinc-400 line-clamp-3 leading-relaxed pt-2">
+                      {module.description}
+                    </p>
+                  </div>
+
+                  {/* Module Footer Stats */}
+                  <div className="border-t border-[#1a1a24] pt-4 mt-auto space-y-3">
+                    <div className="flex items-center justify-between text-[11px] text-zinc-400">
+                      <span className="flex items-center gap-1">
+                        <BookOpen className="w-3.5 h-3.5 text-[#D4AF37]" />
+                        {module.lessons.length} Lesson{module.lessons.length !== 1 ? 's' : ''}
+                      </span>
+
+                      <span className="flex items-center gap-1">
+                        <Clock className="w-3.5 h-3.5 text-zinc-500" />
+                        {module.estimatedDuration}
+                      </span>
+
+                      <span className="flex items-center gap-1 text-[#F5D982] font-semibold">
+                        <Award className="w-3.5 h-3.5 text-[#D4AF37]" />
+                        +{module.xpValue} XP
+                      </span>
+                    </div>
+
+                    {/* Action Button */}
+                    <button
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        onSelectModule(module.id);
+                      }}
+                      className={`w-full py-2.5 rounded-xl text-xs font-serif font-bold uppercase tracking-wider flex items-center justify-center gap-2 transition-all cursor-pointer ${
+                        isCompleted
+                          ? 'bg-emerald-500/10 border border-emerald-500/40 text-emerald-300 hover:bg-emerald-500/20'
+                          : 'bg-[#181822] border border-[#2a2a3a] group-hover:border-[#D4AF37] text-white group-hover:text-[#F5D982] group-hover:bg-[#D4AF37]/15'
+                      }`}
+                    >
+                      <span>{isCompleted ? 'Review Module' : 'Start Training'}</span>
+                      <ChevronRight className="w-3.5 h-3.5 text-[#D4AF37]" />
+                    </button>
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        )}
+
+      </div>
+
     </div>
   );
 }
+

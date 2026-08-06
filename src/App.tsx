@@ -1,8 +1,7 @@
 import { useState } from 'react';
-import { motion, AnimatePresence } from 'motion/react';
+import { motion, AnimatePresence } from 'framer-motion';
 import { ParticleBackground } from './components/ParticleBackground';
 import { Navbar } from './components/Navbar';
-import { Sidebar } from './components/Sidebar';
 import { LandingHero } from './components/LandingHero';
 import { CourseList } from './components/CourseList';
 import { LessonViewer } from './components/LessonViewer';
@@ -15,6 +14,8 @@ import { CertificateView } from './components/CertificateView';
 import { FinalExamView } from './components/FinalExamView';
 import { SettingsView } from './components/SettingsView';
 import { CinematicIntro } from './components/CinematicIntro';
+import { AuthModal } from './components/AuthModal';
+import { ProfileSetupWizard } from './components/ProfileSetupWizard';
 
 import { NavigationTab, Lesson } from './types';
 import { useUserStore } from './lib/useUserStore';
@@ -23,9 +24,14 @@ import { COURSE_MODULES } from './data/modulesData';
 export default function App() {
   const [activeTab, setActiveTab] = useState<NavigationTab>('home');
   const [selectedLesson, setSelectedLesson] = useState<{ moduleId: number; lesson: Lesson } | null>(null);
+  const [isAuthModalOpen, setIsAuthModalOpen] = useState<boolean>(false);
 
   const {
     profile,
+    authUser,
+    needsProfileSetup,
+    handleProfileSetupComplete,
+    signOutUser,
     addXp,
     completeLesson,
     completeModule,
@@ -47,7 +53,23 @@ export default function App() {
     }
   });
 
+  // Protected Routes enforcement: Redirect to Auth Modal if unauthenticated
+  const handleSelectTab = (tab: NavigationTab) => {
+    if (!authUser && tab !== 'home') {
+      setIsAuthModalOpen(true);
+      return;
+    }
+    setActiveTab(tab);
+    if (tab !== 'course') {
+      setSelectedLesson(null);
+    }
+  };
+
   const handleSelectModule = (moduleId: number) => {
+    if (!authUser) {
+      setIsAuthModalOpen(true);
+      return;
+    }
     const mod = COURSE_MODULES.find(m => m.id === moduleId);
     if (mod && mod.lessons.length > 0) {
       const firstUncompleted = mod.lessons.find(l => !profile.completedLessonIds.includes(l.id)) || mod.lessons[0];
@@ -56,6 +78,10 @@ export default function App() {
   };
 
   const handleSelectLesson = (moduleId: number, lessonId: string) => {
+    if (!authUser) {
+      setIsAuthModalOpen(true);
+      return;
+    }
     const mod = COURSE_MODULES.find(m => m.id === moduleId);
     if (mod) {
       const lesson = mod.lessons.find(l => l.id === lessonId);
@@ -88,22 +114,41 @@ export default function App() {
       {/* Dynamic Canvas Particle Overlay */}
       <ParticleBackground />
 
-      {/* Main Top Navigation on all pages */}
+      {/* Main Top Navigation */}
       <Navbar
         activeTab={activeTab}
-        onSelectTab={(tab) => {
-          setActiveTab(tab);
-          if (tab !== 'course') {
-            setSelectedLesson(null);
-          }
-        }}
+        onSelectTab={handleSelectTab}
         profile={profile}
+        authUser={authUser}
+        onOpenAuthModal={() => setIsAuthModalOpen(true)}
+        onSignOut={signOutUser}
       />
 
-      {/* Main Container Content with Cinematic AnimatePresence Scene Changes */}
+      {/* Auth Modal for Sign In / Sign Up / Forgot Password */}
+      <AuthModal
+        isOpen={isAuthModalOpen}
+        onClose={() => setIsAuthModalOpen(false)}
+        onSuccess={() => {
+          setIsAuthModalOpen(false);
+        }}
+      />
+
+      {/* First Login Profile Setup Wizard */}
+      {authUser && (
+        <ProfileSetupWizard
+          isOpen={needsProfileSetup}
+          uid={authUser.uid}
+          defaultEmail={authUser.email || ''}
+          defaultName={authUser.displayName || ''}
+          defaultPhotoURL={authUser.photoURL || ''}
+          onComplete={handleProfileSetupComplete}
+        />
+      )}
+
+      {/* Main Container Content */}
       <main className="min-h-screen relative z-10">
         <AnimatePresence mode="wait">
-          {selectedLesson ? (
+          {selectedLesson && authUser ? (
             <motion.div
               key={`lesson-${selectedLesson.lesson.id}`}
               initial={{ opacity: 0, y: 15, filter: 'blur(4px)' }}
@@ -128,13 +173,13 @@ export default function App() {
             >
               {activeTab === 'home' && (
                 <LandingHero
-                  onSelectTab={setActiveTab}
+                  onSelectTab={handleSelectTab}
                   onSelectModule={handleSelectModule}
                   profile={profile}
                 />
               )}
 
-              {activeTab === 'course' && (
+              {activeTab === 'course' && authUser && (
                 <CourseList
                   onSelectModule={handleSelectModule}
                   onSelectLesson={handleSelectLesson}
@@ -142,47 +187,50 @@ export default function App() {
                 />
               )}
 
-              {activeTab === 'practice' && (
+              {activeTab === 'practice' && authUser && (
                 <PracticeMode
                   onAddXp={addXp}
                 />
               )}
 
-              {activeTab === 'detective-lab' && (
+              {activeTab === 'detective-lab' && authUser && (
                 <DetectiveLab
                   onSolveCase={solveCase}
                   solvedCaseIds={profile.solvedCaseIds}
                 />
               )}
 
-              {activeTab === 'daily-challenge' && (
+              {activeTab === 'daily-challenge' && authUser && (
                 <DailyChallenge
                   onSubmitChallenge={submitDailyChallenge}
                   profile={profile}
                 />
               )}
 
-              {activeTab === 'mentor' && (
+              {activeTab === 'mentor' && authUser && (
                 <AIMentor />
               )}
 
-              {activeTab === 'profile' && (
+              {activeTab === 'profile' && authUser && (
                 <UserProfileView
                   profile={profile}
+                  authUser={authUser}
+                  onSignInGoogle={async () => {}}
+                  onSignOutGoogle={signOutUser}
                   onUpdateName={updateName}
                   onOpenCertificate={() => setActiveTab('certificate')}
                   onToggleAlwaysPlayIntro={toggleAlwaysPlayIntro}
                 />
               )}
 
-              {activeTab === 'certificate' && (
+              {activeTab === 'certificate' && authUser && (
                 <CertificateView
                   profile={profile}
                   onBack={() => setActiveTab('profile')}
                 />
               )}
 
-              {activeTab === 'final-exam' && (
+              {activeTab === 'final-exam' && authUser && (
                 <FinalExamView
                   profile={profile}
                   onPassExam={(xp) => addXp(xp, "Passed Master Observer Examination")}
@@ -190,7 +238,7 @@ export default function App() {
                 />
               )}
 
-              {activeTab === 'settings' && (
+              {activeTab === 'settings' && authUser && (
                 <SettingsView
                   onResetProgress={resetProgress}
                   playIntroOnEveryVisit={profile.playIntroOnEveryVisit}

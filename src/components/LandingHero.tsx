@@ -22,6 +22,7 @@ import {
 } from 'lucide-react';
 import { CourseModule, NavigationTab, UserProfile } from '../types';
 import { COURSE_MODULES } from '../data/modulesData';
+import { BackgroundImage } from './BackgroundImage';
 
 interface LandingHeroProps {
   onSelectTab: (tab: NavigationTab) => void;
@@ -29,7 +30,7 @@ interface LandingHeroProps {
   profile: UserProfile;
 }
 
-export function LandingHero({ onSelectTab, onSelectModule }: LandingHeroProps) {
+export function LandingHero({ onSelectTab, onSelectModule, profile }: LandingHeroProps) {
   const [previewModule, setPreviewModule] = useState<CourseModule | null>(null);
 
   const studentAvatars = [
@@ -55,31 +56,20 @@ export function LandingHero({ onSelectTab, onSelectModule }: LandingHeroProps) {
           transition={{ duration: 1.2, ease: "easeOut" }}
           className="absolute inset-0 z-0 overflow-hidden"
         >
-          <img 
-            src="/hero-bg.jpg" 
+          <BackgroundImage 
+            src="/hero-bg.jpg"
+            fallbackSrc="/hero-bg.png"
             alt="The Jane Method - Detective Observation Background"
-            onError={(e) => {
-              const img = e.currentTarget;
-              if (!img.dataset.failed) {
-                img.dataset.failed = 'true';
-                img.src = '/hero-bg.png';
-              } else {
-                img.style.display = 'none';
-              }
-            }}
             className="w-full h-full object-cover object-center pointer-events-none select-none opacity-90"
-          />
-          {/* Overlays */}
-          <div className="absolute top-0 right-0 w-2/3 h-full light-rays pointer-events-none opacity-50" />
-          <div className="absolute inset-0 film-grain pointer-events-none opacity-20 mix-blend-overlay" />
-          <div className="absolute inset-0 vignette-overlay pointer-events-none" />
-          <div 
-            className="absolute inset-0 pointer-events-none"
-            style={{
-              background: 'linear-gradient(to right, rgba(9,9,9,0.85) 0%, rgba(9,9,9,0.45) 50%, rgba(9,9,9,0.15) 100%)'
+            gradientOverlayStyle={{
+              background: 'linear-gradient(to right, rgba(9,9,9,0.78) 0%, rgba(9,9,9,0.3) 50%, rgba(9,9,9,0.05) 100%)'
             }}
-          />
-          <div className="absolute inset-0 bg-gradient-to-b from-[#090909]/60 via-transparent to-[#090909] pointer-events-none" />
+          >
+            {/* Overlays */}
+            <div className="absolute top-0 right-0 w-2/3 h-full light-rays pointer-events-none opacity-50" />
+            <div className="absolute inset-0 film-grain pointer-events-none opacity-20 mix-blend-overlay" />
+            <div className="absolute inset-0 vignette-overlay pointer-events-none" />
+          </BackgroundImage>
         </motion.div>
 
         {/* Hero Main Content */}
@@ -145,29 +135,70 @@ export function LandingHero({ onSelectTab, onSelectModule }: LandingHeroProps) {
               </button>
             </motion.div>
 
-            {/* Social Proof */}
-            <div className="pt-4 flex items-center gap-4 border-t border-[#262626]/80">
-              <div className="flex -space-x-2">
-                {studentAvatars.map((url, i) => (
-                  <img
-                    key={i}
-                    src={url}
-                    alt="Learner avatar"
-                    className="w-9 h-9 rounded-full object-cover border-2 border-[#090909]"
-                  />
-                ))}
+            {/* Social Proof & Live User Progress */}
+            {profile && profile.name ? (
+              <div className="pt-4 border-t border-[#262626]/80 space-y-3">
+                <div className="flex items-center justify-between">
+                  <span className="text-xs font-mono uppercase text-[#D4AF37] font-bold tracking-wider flex items-center gap-1.5">
+                    <ShieldCheck className="w-4 h-4 text-[#D4AF37]" />
+                    ACTIVE DOSSIER: {profile.name} ({profile.rank})
+                  </span>
+                  <span className="text-xs font-mono text-zinc-400">
+                    {profile.xp} XP
+                  </span>
+                </div>
+
+                <div className="grid grid-cols-3 gap-2 bg-[#121216] border border-[#262636] p-3 rounded-xl text-center">
+                  <div>
+                    <span className="font-serif font-bold text-base text-[#F5D982] block">
+                      {profile.completedLessonIds?.length || 0}
+                    </span>
+                    <span className="text-[10px] font-mono text-zinc-400 uppercase block">
+                      Lessons Done
+                    </span>
+                  </div>
+                  <div>
+                    <span className="font-serif font-bold text-base text-[#F5D982] block">
+                      {profile.solvedCaseIds?.length || 0}
+                    </span>
+                    <span className="text-[10px] font-mono text-zinc-400 uppercase block">
+                      Cases Solved
+                    </span>
+                  </div>
+                  <div>
+                    <span className="font-serif font-bold text-base text-[#F5D982] block">
+                      {profile.streakDays || 1}d
+                    </span>
+                    <span className="text-[10px] font-mono text-zinc-400 uppercase block">
+                      Active Streak
+                    </span>
+                  </div>
+                </div>
               </div>
-              <div>
-                <div className="flex items-center gap-1 text-[#D4AF37]">
-                  {[...Array(5)].map((_, i) => (
-                    <Star key={i} className="w-3.5 h-3.5 fill-current" />
+            ) : (
+              <div className="pt-4 flex items-center gap-4 border-t border-[#262626]/80">
+                <div className="flex -space-x-2">
+                  {studentAvatars.map((url, i) => (
+                    <img
+                      key={i}
+                      src={url}
+                      alt="Learner avatar"
+                      className="w-9 h-9 rounded-full object-cover border-2 border-[#090909]"
+                    />
                   ))}
                 </div>
-                <p className="text-xs text-[#B8B8B8] font-medium mt-0.5">
-                  Trusted by thousands of learners.
-                </p>
+                <div>
+                  <div className="flex items-center gap-1 text-[#D4AF37]">
+                    {[...Array(5)].map((_, i) => (
+                      <Star key={i} className="w-3.5 h-3.5 fill-current" />
+                    ))}
+                  </div>
+                  <p className="text-xs text-[#B8B8B8] font-medium mt-0.5">
+                    Trusted by thousands of learners.
+                  </p>
+                </div>
               </div>
-            </div>
+            )}
 
           </motion.div>
         </div>
