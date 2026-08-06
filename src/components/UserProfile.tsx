@@ -75,7 +75,7 @@ export function UserProfileView({
         {/* Background Detective Desk Image */}
         <BackgroundImage 
           src="/practice-bg.jpg"
-          fallbackSrc="/hero-bg.jpg"
+          fallbackSrc="https://images.unsplash.com/photo-1559757175-5700dde675bc?auto=format&fit=crop&w=1920&q=80"
           alt="Detective Desk Background"
           className="w-full h-full object-cover object-center pointer-events-none opacity-90"
           gradientOverlayStyle={{

@@ -129,7 +129,7 @@ export function CourseList({ onSelectModule, profile }: CourseListProps) {
           {/* Main Background Image */}
           <BackgroundImage 
             src="/course-bg.jpg"
-            fallbackSrc="/course-bg.png"
+            fallbackSrc="https://images.unsplash.com/photo-1528819622765-d6bcf132f793?auto=format&fit=crop&w=1920&q=80"
             alt="The Academy Study Desk"
             className="w-full h-full object-cover object-center pointer-events-none opacity-95 transition-transform duration-700 group-hover:scale-105"
             gradientOverlayStyle={{

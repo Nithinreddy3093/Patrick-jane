@@ -109,7 +109,7 @@ export function DailyChallenge({ onSubmitChallenge, profile }: DailyChallengePro
         <div className="absolute inset-0 z-0 select-none overflow-hidden">
           <BackgroundImage 
             src="/daily-challenge-bg.jpg"
-            fallbackSrc="/daily-challenge-bg.png"
+            fallbackSrc="https://images.unsplash.com/photo-1516321318423-f06f85e504b3?auto=format&fit=crop&w=1920&q=80"
             alt="The Jane Method Daily Challenge Detective Desk"
             className="w-full h-full object-cover object-center pointer-events-none scale-105"
             gradientOverlayClassName="absolute inset-0 bg-gradient-to-r from-[#090909]/80 via-[#090909]/40 to-transparent pointer-events-none"

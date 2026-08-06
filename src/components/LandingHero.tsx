@@ -58,7 +58,7 @@ export function LandingHero({ onSelectTab, onSelectModule, profile }: LandingHer
         >
           <BackgroundImage 
             src="/hero-bg.jpg"
-            fallbackSrc="/hero-bg.png"
+            fallbackSrc="https://images.unsplash.com/photo-1507679799987-c73779587ccf?auto=format&fit=crop&w=1920&q=80"
             alt="The Jane Method - Detective Observation Background"
             className="w-full h-full object-cover object-center pointer-events-none select-none opacity-90"
             gradientOverlayStyle={{

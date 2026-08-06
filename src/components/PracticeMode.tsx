@@ -143,7 +143,7 @@ export function PracticeMode({ onAddXp }: PracticeModeProps) {
         {/* Background Detective Desk/Study Image */}
         <BackgroundImage 
           src="/practice-bg.jpg"
-          fallbackSrc="/practice-bg.png"
+          fallbackSrc="https://images.unsplash.com/photo-1451187580459-43490279c0fa?auto=format&fit=crop&w=1920&q=80"
           alt="Practice Mode Detective Desk Background"
           className="w-full h-full object-cover object-center pointer-events-none opacity-95 transition-transform duration-700 group-hover:scale-105"
           gradientOverlayStyle={{
