@@ -93,6 +93,8 @@ export function AuthModal({ isOpen, onClose, onSuccess, initialMode = 'signin' }
         msg = 'An account with this email already exists.';
       } else if (err?.code === 'auth/invalid-email') {
         msg = 'Please provide a valid email address.';
+      } else if (err?.code === 'auth/unauthorized-domain') {
+        msg = 'Domain not authorized in Firebase Console. Local observer session enabled.';
       }
       setErrorMsg(msg);
     } finally {
